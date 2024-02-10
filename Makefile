@@ -3,11 +3,12 @@ all: lib main
 lib:
 	$(MAKE) -C ./wrapper
 	$(MAKE) -C ./cplusplus
-	g++ -o ./bin/libwrapper.so -shared -fPIC ./obj/wrapper.o ./obj/cplusplus.o 
+	ld -relocatable ./obj/wrapper.o ./obj/cplusplus.o -o ./obj/lib.o
 
 main:
-	gcc main.c -o ./bin/main -L./bin -lwrapper -Wl,-rpath,./bin
+	gcc -c main.c -o ./obj/main.o
+	g++ ./obj/main.o ./obj/lib.o -o ./bin/main
 
 clean:
-	rm -f ./bin/main ./bin/*.so ./obj/*.o
+	rm -f ./bin/main ./obj/*.o
 
